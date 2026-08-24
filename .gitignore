@@ -1,8 +1,6 @@
 # 构建产物
 bin/
 obj/
-dist/
-dist-new/
 release/
 
 # tests 内部构建产物与截图
@@ -18,9 +16,6 @@ smoke-test*.log
 *.tmp
 *.bak
 *.orig
-
-# IconGen 调试输出
-tests/IconGen/preview/
 
 # IDE
 .vs/
