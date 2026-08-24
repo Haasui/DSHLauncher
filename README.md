@@ -14,7 +14,7 @@ DeepSeek Harness的Windows桌面启动器（本质只是`npx @deepseek-ai/dsh we
 
 从源码构建：
 ```powershell
-dotnet build -c Release          # 0 警告 0 错误
+dotnet build -c Release
 dotnet publish -c Release -o release
 ```
 
