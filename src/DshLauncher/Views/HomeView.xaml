@@ -99,21 +99,30 @@
 
                     <!-- 一言 -->
                     <Grid Margin="0,16,0,0">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="Auto"/>
-                        </Grid.ColumnDefinitions>
-                        <StackPanel Orientation="Horizontal">
-                            <Border Width="24" Height="24" CornerRadius="12" Background="{DynamicResource Brush.Surface.Hover}" VerticalAlignment="Center">
-                                    <Image Source="pack://application:,,,/Assets/app-brand.png" Width="16" Height="16" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                </Border>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <DockPanel>
+                            <Border DockPanel.Dock="Left" Width="24" Height="24" CornerRadius="12" Background="{DynamicResource Brush.Surface.Hover}" VerticalAlignment="Center">
+                                <Image Source="pack://application:,,,/Assets/app-brand.png" Width="16" Height="16" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
                             <TextBlock Text="{Binding Quote}" FontSize="13" TextWrapping="Wrap" Margin="8,0,0,0" VerticalAlignment="Center"/>
-                        </StackPanel>
-                        <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="12,0,0,0">
+                        </DockPanel>
+                        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,8,0,0">
                             <TextBlock Text="—— " Foreground="{DynamicResource Brush.Text.Dim}" FontSize="12" VerticalAlignment="Center"/>
-                            <TextBlock Text="{Binding QuoteAuthor}" Foreground="{DynamicResource Brush.Text.Secondary}" FontSize="12"/>
-                            <Button Content="换一句" Command="{Binding RandomQuoteCommand}" Padding="9,4" FontSize="12" Margin="12,0,0,0"/>
-                            <Button Content="复制" Command="{Binding CopyQuoteCommand}" Padding="9,4" FontSize="12" Margin="8,0,0,0"/>
+                            <TextBlock Text="{Binding QuoteAuthor}" Foreground="{DynamicResource Brush.Text.Secondary}" FontSize="12" VerticalAlignment="Center"/>
+                            <Button Command="{Binding RandomQuoteCommand}" Padding="7,4" Margin="12,0,0,0" ToolTip="换一句">
+                                <Grid Width="15" Height="15">
+                                    <TextBlock Text="&#xE72C;" FontFamily="Segoe MDL2 Assets" FontSize="15" VerticalAlignment="Center"
+                                               Visibility="{Binding IsQuoteLoading, Converter={StaticResource InvertBoolToVis}}"/>
+                                    <TextBlock Text="&#xE895;" FontFamily="Segoe MDL2 Assets" FontSize="14" VerticalAlignment="Center" FontWeight="Bold"
+                                               Visibility="{Binding IsQuoteLoading, Converter={StaticResource BoolToVis}}"/>
+                                </Grid>
+                            </Button>
+                            <Button Command="{Binding CopyQuoteCommand}" Padding="7,4" Margin="4,0,0,0" ToolTip="复制">
+                                <TextBlock Text="&#xE8C8;" FontFamily="Segoe MDL2 Assets" FontSize="15" VerticalAlignment="Center"/>
+                            </Button>
                         </StackPanel>
                     </Grid>
 
@@ -133,7 +142,7 @@
             <Border Style="{StaticResource Card}" Margin="0,16,0,0">
                 <StackPanel>
                     <DockPanel>
-                        <TextBlock Text="会话导出" FontSize="15" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                        <TextBlock Text="会话导出" Style="{StaticResource CardTitle}" VerticalAlignment="Center"/>
                         <Button DockPanel.Dock="Right" Content="刷新" Command="{Binding Export.RefreshCommand}"
                                 Padding="10,4" FontSize="12" HorizontalAlignment="Right" VerticalAlignment="Center"/>
                     </DockPanel>
@@ -157,7 +166,7 @@
             <Border Style="{StaticResource Card}" Margin="0,16,0,0">
                 <StackPanel>
                     <DockPanel>
-                        <TextBlock Text="工作区会话树" FontSize="15" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                        <TextBlock Text="工作区会话树" Style="{StaticResource CardTitle}" VerticalAlignment="Center"/>
                         <Button DockPanel.Dock="Right" Content="刷新" Command="{Binding SessionTree.RefreshCommand}"
                                 Padding="10,4" FontSize="12" HorizontalAlignment="Right" VerticalAlignment="Center"/>
                     </DockPanel>

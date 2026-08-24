@@ -5,14 +5,14 @@
     <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
 <StackPanel>
   <TextBlock Style="{StaticResource PageHeader}" Text="关于"/>
-  <Border Style="{StaticResource Card}" Margin="0,18,0,0">
+  <Border Style="{StaticResource Card}" Margin="0,16,0,0">
     <StackPanel>
       <TextBlock Text="DeepSeek Harness 启动器" FontSize="18" FontWeight="SemiBold"/>
       <TextBlock Text="{Binding AppVersion}" Style="{StaticResource PageSubtitle}" Margin="0,6,0,0"/>
       <TextBlock Text="{Binding Runtime}" Style="{StaticResource PageSubtitle}" Margin="0,4,0,0"/>
       <TextBlock Text="{Binding AppDir}" Style="{StaticResource PageSubtitle}" Margin="0,4,0,0"/>
       <TextBlock Text="基于 WPF 与浏览器内核构建。" Style="{StaticResource PageSubtitle}" Margin="0,16,0,0"/>
-      <StackPanel Orientation="Horizontal" Margin="0,14,0,0">
+      <StackPanel Orientation="Horizontal" Margin="0,16,0,0">
         <TextBlock Text="项目主页：" VerticalAlignment="Center" Foreground="{DynamicResource Brush.Text.Secondary}"/>
         <TextBlock Text="{Binding RepositoryUrl}" VerticalAlignment="Center" Foreground="{DynamicResource Brush.Accent.Blue}"
                    TextDecorations="Underline" Margin="6,0,0,0"/>

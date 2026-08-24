@@ -6,7 +6,7 @@
         <StackPanel>
             <TextBlock Style="{StaticResource PageHeader}" Text="更新"/>
 
-            <Border Style="{StaticResource Card}" Margin="0,18,0,0">
+            <Border Style="{StaticResource Card}" Margin="0,16,0,0">
                 <StackPanel>
                     <WrapPanel>
                         <StackPanel Width="200" Margin="0,0,12,12">
@@ -16,14 +16,14 @@
                         <StackPanel Width="200" Margin="0,0,12,12">
                             <TextBlock Style="{StaticResource FieldLabel}" Text="正式版"/>
                             <TextBlock Text="{Binding LatestVersion}" FontSize="18" FontWeight="SemiBold" Margin="0,6,0,0" TextTrimming="CharacterEllipsis"/>
-                            <Button Content="安装正式版" Margin="0,10,0,0" HorizontalAlignment="Left"
+                            <Button Content="安装正式版" Margin="0,12,0,0" HorizontalAlignment="Left"
                                     Padding="10,4" Command="{Binding InstallLatestCommand}"
                                     IsEnabled="{Binding CanInstallLatest}"/>
                         </StackPanel>
                         <StackPanel Width="200" Margin="0,0,12,12">
                             <TextBlock Style="{StaticResource FieldLabel}" Text="预览版"/>
                             <TextBlock Text="{Binding NextVersion}" FontSize="18" FontWeight="SemiBold" Margin="0,6,0,0" TextTrimming="CharacterEllipsis"/>
-                            <Button Content="安装预览版" Margin="0,10,0,0" HorizontalAlignment="Left"
+                            <Button Content="安装预览版" Margin="0,12,0,0" HorizontalAlignment="Left"
                                     Padding="10,4" Command="{Binding InstallNextCommand}"
                                     IsEnabled="{Binding CanInstallNext}"
                                     Style="{StaticResource GreenButton}"/>
@@ -33,7 +33,7 @@
                     <TextBlock Text="{Binding UpdateAvailableText}" Margin="0,16,0,0"
                                Foreground="{DynamicResource Brush.Text.Secondary}"/>
 
-                    <StackPanel Orientation="Horizontal" Margin="0,18,0,0">
+                    <StackPanel Orientation="Horizontal" Margin="0,16,0,0">
                         <ComboBox ItemsSource="{Binding ChannelOptions}" SelectedItem="{Binding SelectedChannelDisplay}"
                                   Width="110" VerticalAlignment="Center"/>
                         <Button Content="检查更新" Command="{Binding CheckCommand}" Margin="10,0,0,0"/>
@@ -49,10 +49,10 @@
             <!-- 启动器自更新（B9）：launcher 自己的 GitHub release 检查与替换 -->
             <Border Style="{StaticResource Card}" Margin="0,16,0,0">
                 <StackPanel>
-                    <TextBlock Text="启动器自更新" FontSize="16" FontWeight="SemiBold"/>
+                    <TextBlock Text="启动器自更新" Style="{StaticResource CardTitle}"/>
                     <TextBlock Text="检查 DeepSeek Harness 启动器自身的新版本（GitHub release），下载后自动替换并重启。"
                                Style="{StaticResource PageSubtitle}" Margin="0,4,0,0" TextWrapping="Wrap"/>
-                    <Grid Margin="0,14,0,0">
+                    <Grid Margin="0,16,0,0">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="*"/>
@@ -60,7 +60,7 @@
                         <TextBlock Text="当前版本" VerticalAlignment="Center"/>
                         <TextBlock Grid.Column="1" Text="{Binding LauncherCurrent}" FontWeight="SemiBold" Margin="16,0,0,0"/>
                     </Grid>
-                    <Grid Margin="0,10,0,0">
+                    <Grid Margin="0,12,0,0">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="*"/>
@@ -74,7 +74,7 @@
                                 Command="{Binding UpdateLauncherCommand}"
                                 IsEnabled="{Binding LauncherCanUpdate}" Margin="10,0,0,0"/>
                     </StackPanel>
-                    <TextBlock Text="{Binding LauncherStatus}" Style="{StaticResource PageSubtitle}" Margin="0,14,0,0" TextWrapping="Wrap"/>
+                    <TextBlock Text="{Binding LauncherStatus}" Style="{StaticResource PageSubtitle}" Margin="0,16,0,0" TextWrapping="Wrap"/>
                 </StackPanel>
             </Border>
 

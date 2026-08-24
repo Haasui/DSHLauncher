@@ -248,6 +248,9 @@ public partial class HomeViewModel : ObservableObject
     [ObservableProperty]
     private string _quoteAuthor = string.Empty;
 
+    [ObservableProperty]
+    private bool _isQuoteLoading;
+
 
 
     [RelayCommand]
@@ -256,6 +259,7 @@ public partial class HomeViewModel : ObservableObject
     /// <summary>联网取「一言」语录（hitokoto API），失败时给一句友好占位。</summary>
     private async Task FetchQuoteAsync()
     {
+        IsQuoteLoading = true;
         try
         {
             using var hc = new HttpClient { Timeout = TimeSpan.FromSeconds(6) };
@@ -278,6 +282,7 @@ public partial class HomeViewModel : ObservableObject
             }
         }
         catch { }
+        finally { IsQuoteLoading = false; }
         Quote = "（网络暂不可用，稍后再试）";
         QuoteAuthor = "一言";
     }
@@ -503,6 +508,9 @@ public partial class HomeViewModel : ObservableObject
             var host = await api.DescribeHostAsync();
             var sessions = await api.ListSessionsAsync();
             var workspaces = await api.ListWorkspacesAsync();
+            var archivedId = (await api.GetArchivedSessionIdsAsync()).ToHashSet();
+            // 只统计真实会话：排除子代理派生、空白、归档（与会话树一致，避免 10 个子代理撑数）
+            var visible = sessions.Where(s => !s.Blank && !s.IsSubagent && !archivedId.Contains(s.SessionId)).ToList();
             var sb = new System.Text.StringBuilder();
             if (host is not null)
             {
@@ -512,8 +520,8 @@ public partial class HomeViewModel : ObservableObject
                 if (host.CanOpenPath) sb.Append("  ·  可打开路径");
                 sb.AppendLine();
             }
-            var running = sessions.Where(s => s.Running).ToList();
-            sb.AppendLine($"会话  共 {sessions.Count} 个（运行中 {running.Count}）");
+            var running = visible.Where(s => s.Running).ToList();
+            sb.AppendLine($"会话  共 {visible.Count} 个（运行中 {running.Count}）");
             // 只列运行中的会话（归档/旧会话在 DSH UI 里没有查看入口，不列，避免噪音）
             foreach (var s in running.Take(4))
             {
@@ -527,8 +535,8 @@ public partial class HomeViewModel : ObservableObject
             OverviewText = sb.ToString();
             OnPropertyChanged(nameof(HasOverview));
 
-            // 统计卡片：会话 = 运行中的（活动会话，用户只看运行的）
-            SessionCount = sessions.Count(s => s.Running);
+            // 统计卡片：会话 = 运行中的真实会话（排除子代理等）
+            SessionCount = visible.Count(s => s.Running);
             WorkspaceCount = workspaces.Count;
             FileLog.Write($"RefreshOverview: sessions={sessions.Count} running={SessionCount} State={State}");
         }

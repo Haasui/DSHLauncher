@@ -25,7 +25,6 @@ public partial class SettingsViewModel : ObservableObject
         _theme = _settings.Theme;
         _npmRegistry = _settings.NpmRegistry ?? string.Empty;
         _quoteApiUrl = _settings.QuoteApiUrl ?? string.Empty;
-        _language = _settings.Language;
         _ = LoadModelConfigAsync();
     }
 
@@ -74,17 +73,6 @@ public partial class SettingsViewModel : ObservableObject
 
     [ObservableProperty]
     private string _quoteApiUrl = string.Empty;
-
-    public string[] LanguageOptions { get; } = { "中文", "English" };
-
-    public string SelectedLanguageDisplay
-    {
-        get => Language == "en" ? "English" : "中文";
-        set => Language = value == "English" ? "en" : "zh";
-    }
-
-    [ObservableProperty]
-    private string _language = "zh";
 
     // ---- DSH 默认模型（agent-default-model 图形化配置） ----
     public ObservableCollection<string> ProviderSuggestions { get; } = new();
@@ -146,7 +134,6 @@ public partial class SettingsViewModel : ObservableObject
         ThemeManager.Apply(ThemeManager.Resolve(Theme)); // 保存后应用（保留界面即时生效）
         _settings.NpmRegistry = string.IsNullOrWhiteSpace(NpmRegistry) ? null : NpmRegistry.Trim();
         _settings.QuoteApiUrl = string.IsNullOrWhiteSpace(QuoteApiUrl) ? null : QuoteApiUrl.Trim();
-        _settings.Language = Language;
         try
         {
             await _settings.SaveAsync();

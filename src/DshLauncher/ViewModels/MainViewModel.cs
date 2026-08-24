@@ -60,14 +60,14 @@ public partial class MainViewModel : ObservableObject, INavigationService
         _embed = new EmbedViewModel(AppServices.Settings, AppServices.Status, this);
         Home = new HomeViewModel(AppServices.Dsh, AppServices.Status, AppServices.Log, AppServices.Settings, this);
         StatusBar = new StatusBarViewModel(this);
-        NavItems.Add(new NavItem(Loc.Get("nav.home"), "", Home));
-        NavItems.Add(new NavItem(Loc.Get("nav.settings"), "", new SettingsViewModel(AppServices.Settings)));
-        NavItems.Add(new NavItem(Loc.Get("nav.doctor"), "", new DoctorViewModel(AppServices.Doctor)));
-        NavItems.Add(new NavItem(Loc.Get("nav.update"), "", new UpdateViewModel(AppServices.Update)));
-        NavItems.Add(new NavItem(Loc.Get("nav.plugin"), "", new PluginViewModel(AppServices.Plugin)));
-        NavItems.Add(new NavItem(Loc.Get("nav.quick"), "", new QuickRefViewModel()));
-        NavItems.Add(new NavItem(Loc.Get("nav.log"), "", new LogViewModel(AppServices.Log)));
-        NavItems.Add(new NavItem(Loc.Get("nav.about"), "", new AboutViewModel()));
+        NavItems.Add(new NavItem("启动", "", Home));
+        NavItems.Add(new NavItem("设置", "", new SettingsViewModel(AppServices.Settings)));
+        NavItems.Add(new NavItem("诊断", "", new DoctorViewModel(AppServices.Doctor)));
+        NavItems.Add(new NavItem("更新", "", new UpdateViewModel(AppServices.Update)));
+        NavItems.Add(new NavItem("插件", "", new PluginViewModel(AppServices.Plugin)));
+        NavItems.Add(new NavItem("速查", "", new QuickRefViewModel()));
+        NavItems.Add(new NavItem("日志", "", new LogViewModel(AppServices.Log)));
+        NavItems.Add(new NavItem("关于", "", new AboutViewModel()));
 
         SelectedNavItem = NavItems[0];
 

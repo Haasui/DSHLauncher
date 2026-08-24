@@ -37,7 +37,7 @@
             </StackPanel>
 
             <!-- 健康汇总 -->
-            <TextBlock Text="{Binding HealthSummary}" FontSize="13" FontWeight="SemiBold" Margin="0,14,0,0"
+            <TextBlock Text="{Binding HealthSummary}" FontSize="13" FontWeight="SemiBold" Margin="0,16,0,0"
                        Foreground="{DynamicResource Brush.Text.Primary}"/>
 
             <!-- 检测项：网格卡片（Napcat system_status_display 风） -->

@@ -38,8 +38,6 @@ public interface ISettingsService
     /// <summary>一言语录接口（空=默认国际镜像）。</summary>
     string? QuoteApiUrl { get; set; }
 
-    /// <summary>界面语言：zh | en。</summary>
-    string Language { get; set; }
 
     /// <summary>配置文件路径。</summary>
     string ConfigPath { get; }

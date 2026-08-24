@@ -93,7 +93,7 @@ public sealed class DoctorService : IDoctorService
         var r = await CommandRunner.RunAsync("node --version", CmdTimeout, ct);
         return Semver.TryParse(r.Output) is { } v
             ? new DoctorCheck("Node.js", CheckStatus.Pass, $"已安装 v{v}")
-            : new DoctorCheck("Node.js", CheckStatus.Fail, string.IsNullOrEmpty(r.Output) ? "未找到 node" : r.Output);
+            : new DoctorCheck("Node.js", CheckStatus.Fail, NotFound(r.Output, "Node.js"));
     }
 
     private static async Task<DoctorCheck> CheckNpmAsync(CancellationToken ct)
@@ -101,7 +101,7 @@ public sealed class DoctorService : IDoctorService
         var r = await CommandRunner.RunAsync("npm --version", CmdTimeout, ct);
         return r.ExitCode == 0 && !string.IsNullOrWhiteSpace(r.Output)
             ? new DoctorCheck("npm", CheckStatus.Pass, $"已安装 v{r.Output.Split('\n')[0]}")
-            : new DoctorCheck("npm", CheckStatus.Fail, string.IsNullOrEmpty(r.Output) ? "未找到 npm" : r.Output);
+            : new DoctorCheck("npm", CheckStatus.Fail, NotFound(r.Output, "npm"));
     }
 
     private static async Task<DoctorCheck> CheckDshAsync(CancellationToken ct)
@@ -110,7 +110,20 @@ public sealed class DoctorService : IDoctorService
         var version = Semver.ExtractVersion(r.Output);
         return version is not null
             ? new DoctorCheck("dsh", CheckStatus.Pass, $"已安装 {version}")
-            : new DoctorCheck("dsh", CheckStatus.Fail, string.IsNullOrEmpty(r.Output) ? "未找到 dsh" : r.Output);
+            : new DoctorCheck("dsh", CheckStatus.Fail, NotFound(r.Output, "dsh"));
+    }
+
+    /// <summary>把“命令不存在”的 OS 报错换成友好引导，其余报错原样展示。</summary>
+    private static string NotFound(string output, string name)
+    {
+        var t = (output ?? "").ToLowerInvariant();
+        if (string.IsNullOrWhiteSpace(t)
+            || t.Contains("不是内部或外部命令")
+            || t.Contains("not recognized")
+            || t.Contains("not found")
+            || t.Contains("no such file"))
+            return $"未找到 {name}，请先安装（可点「一键修复」打开下载页或自动安装）";
+        return output ?? "";
     }
 
     private static DoctorCheck CheckPort(int port)

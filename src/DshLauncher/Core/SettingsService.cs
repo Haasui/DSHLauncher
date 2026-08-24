@@ -35,9 +35,6 @@ public sealed class SettingsService : ISettingsService
     /// <summary>一言语录接口（空=默认国际镜像 https://international.v1.hitokoto.cn/）。</summary>
     public string? QuoteApiUrl { get; set; }
 
-    /// <summary>界面语言：zh | en。</summary>
-    public string Language { get; set; } = "zh";
-
     public string ConfigPath { get; } = Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
         "DshLauncher", "config.json");
@@ -62,7 +59,6 @@ public sealed class SettingsService : ISettingsService
             if (data.Theme is "light" or "dark") Theme = data.Theme;
             NpmRegistry = string.IsNullOrWhiteSpace(data.NpmRegistry) ? null : data.NpmRegistry!.Trim();
             QuoteApiUrl = string.IsNullOrWhiteSpace(data.QuoteApiUrl) ? null : data.QuoteApiUrl!.Trim();
-            if (data.Language is "zh" or "en") Language = data.Language;
         }
         catch (Exception ex)
         {
@@ -90,7 +86,6 @@ public sealed class SettingsService : ISettingsService
             Theme = Theme,
             NpmRegistry = NpmRegistry,
             QuoteApiUrl = QuoteApiUrl,
-            Language = Language,
         };
         var json = JsonSerializer.Serialize(data, new JsonSerializerOptions { WriteIndented = true });
         await File.WriteAllTextAsync(ConfigPath, json, ct);
@@ -135,6 +130,5 @@ public sealed class SettingsService : ISettingsService
         public bool? FollowWebTheme { get; set; }
         public string? NpmRegistry { get; set; }
         public string? QuoteApiUrl { get; set; }
-        public string Language { get; set; } = "zh";
     }
 }

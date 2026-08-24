@@ -14,17 +14,17 @@
         <StackPanel>
             <TextBlock Style="{StaticResource PageHeader}" Text="设置"/>
 
-            <Border Style="{StaticResource Card}" Margin="0,18,0,0">
+            <Border Style="{StaticResource Card}" Margin="0,16,0,0">
                 <StackPanel>
                     <TextBlock Style="{StaticResource SectionHeader}" Text="启动"/>
                     <TextBlock Style="{StaticResource FieldLabel}" Text="DeepSeek Harness 端口"/>
                     <TextBox Text="{Binding Port, UpdateSourceTrigger=PropertyChanged}"
                              Width="140" HorizontalAlignment="Left" Margin="0,6,0,0"/>
 
-                    <TextBlock Style="{StaticResource FieldLabel}" Text="附加启动参数" Margin="0,18,0,0"/>
+                    <TextBlock Style="{StaticResource FieldLabel}" Text="附加启动参数" Margin="0,16,0,0"/>
                     <TextBox Text="{Binding ExtraArgs, UpdateSourceTrigger=PropertyChanged}" Margin="0,6,0,0"/>
 
-                    <TextBlock Style="{StaticResource FieldLabel}" Text="补丁文件路径" Margin="0,14,0,0"/>
+                    <TextBlock Style="{StaticResource FieldLabel}" Text="补丁文件路径" Margin="0,16,0,0"/>
                     <TextBox Text="{Binding PatchFile, UpdateSourceTrigger=PropertyChanged}" Margin="0,6,0,0"/>
 
                     <!-- 设置开关（Napcat switch_card：标签+开关 一行） -->
@@ -80,19 +80,7 @@
                         <ComboBox Grid.Column="1" ItemsSource="{Binding ThemeOptions}"
                                   SelectedItem="{Binding SelectedThemeDisplay}" Width="140" VerticalAlignment="Center"/>
                     </Grid>
-                    <TextBlock Text="全局热键：Ctrl+Alt+D 唤起 · Ctrl+Alt+E 打开界面 · Ctrl+Alt+S 停止"
-                               Foreground="{DynamicResource Brush.Text.Dim}" FontSize="11" Margin="0,14,0,0" TextWrapping="Wrap"/>
 
-                    <TextBlock Style="{StaticResource SectionHeader}" Text="界面"/>
-                    <Grid Margin="0,12,0,0">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="Auto"/>
-                        </Grid.ColumnDefinitions>
-                        <TextBlock Text="界面语言" VerticalAlignment="Center"/>
-                        <ComboBox Grid.Column="1" ItemsSource="{Binding LanguageOptions}"
-                                  SelectedItem="{Binding SelectedLanguageDisplay}" Width="120" VerticalAlignment="Center"/>
-                    </Grid>
 
                     <TextBlock Style="{StaticResource SectionHeader}" Text="网络"/>
                     <TextBlock Style="{StaticResource FieldLabel}" Text="npm 镜像/代理（可选）" Margin="0,12,0,0"/>
@@ -116,9 +104,9 @@
             </Border>
 
             <!-- DSH 官方设置（host 视角，只读，settings.describe 官方 API） -->
-            <Border Style="{StaticResource Card}" Margin="0,14,0,0">
+            <Border Style="{StaticResource Card}" Margin="0,16,0,0">
                 <StackPanel>
-                    <TextBlock Text="DeepSeek Harness 运行配置（高级）" FontSize="16" FontWeight="SemiBold"/>
+                    <TextBlock Text="运行配置" Style="{StaticResource CardTitle}"/>
                     <TextBlock Text="查看运行中 DeepSeek Harness 的配置。仅供排查。"
                                Style="{StaticResource PageSubtitle}" Margin="0,4,0,0" TextWrapping="Wrap"/>
                     <StackPanel Orientation="Horizontal" Margin="0,12,0,0">
@@ -158,9 +146,9 @@
             </Border>
 
             <!-- DSH 默认模型（B7，graphical config，写入走官方 settings.mutate CAS） -->
-            <Border Style="{StaticResource Card}" Margin="0,14,0,0">
+            <Border Style="{StaticResource Card}" Margin="0,16,0,0">
                 <StackPanel>
-                    <TextBlock Text="默认模型" FontSize="16" FontWeight="SemiBold"/>
+                    <TextBlock Text="默认模型" Style="{StaticResource CardTitle}"/>
                     <TextBlock Text="设置 DeepSeek Harness 默认使用的模型。"
                                Style="{StaticResource PageSubtitle}" Margin="0,4,0,0" TextWrapping="Wrap"/>
                     <StackPanel Orientation="Horizontal" Margin="0,12,0,0">
@@ -169,7 +157,7 @@
                                    VerticalAlignment="Center" Margin="12,0,0,0" TextWrapping="Wrap"/>
                     </StackPanel>
 
-                    <Grid Margin="0,14,0,0">
+                    <Grid Margin="0,16,0,0">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="*"/>

@@ -62,18 +62,11 @@ public partial class App : Application
         // 若异步等待，窗口会先于设置加载完成而建出，自动启动会读到默认值）
         AppServices.Settings.LoadAsync().GetAwaiter().GetResult();
         ThemeManager.Apply(ThemeManager.Resolve(AppServices.Settings.Theme)); // 浅/深色（支持实时热切）
-        Loc.Current = AppServices.Settings.Language; // 界面语言
         base.OnStartup(e);
 
         // 托盘
         SetupTray();
         AttachTrayStatus(); // 托盘悬停文字动态显示 DSH 状态
-
-        // C11：全局热键 Ctrl+Alt+D/E/S 唤起/打开界面/停止
-        GlobalHotkeyManager.OnShow = ShowMainWindow;
-        GlobalHotkeyManager.OnOpen = () => RunOnUi(() => MainVm?.Home.OpenInterface());
-        GlobalHotkeyManager.OnStop = () => RunOnUi(() => MainVm?.Home.StopCommand.Execute(null));
-        GlobalHotkeyManager.Attach(MainWindow);
     }
 
     /// <summary>订阅 Home 状态变化，实时更新托盘悬停文字（状态/端口/模型）。</summary>
@@ -154,7 +147,6 @@ public partial class App : Application
 
     protected override void OnExit(ExitEventArgs e)
     {
-        GlobalHotkeyManager.Detach();
         try { Tray?.Dispose(); } catch { }
         try { AppServices.Status.Stop(); } catch { }
         try { _mutex?.ReleaseMutex(); } catch { }

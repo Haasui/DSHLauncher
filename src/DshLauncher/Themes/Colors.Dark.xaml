@@ -10,7 +10,7 @@
 
     <Color x:Key="Color.Text.Primary">#FFF2F5FB</Color>
     <Color x:Key="Color.Text.Secondary">#FFBCC6D6</Color>
-    <Color x:Key="Color.Text.Dim">#FF9099AA</Color>
+    <Color x:Key="Color.Text.Dim">#FFAAB6CC</Color>
 
     <Color x:Key="Color.Accent.Blue">#FF5C9DFF</Color>
     <Color x:Key="Color.Accent.Green">#FF22C55E</Color>

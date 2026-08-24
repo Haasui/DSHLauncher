@@ -10,6 +10,7 @@
                 <ResourceDictionary Source="Themes/Styles.xaml"/>
             </ResourceDictionary.MergedDictionaries>
             <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+            <conv:InvertBoolToVisConverter x:Key="InvertBoolToVis"/>
             <conv:InvertBoolConverter x:Key="InvertBool"/>
             <conv:NullToCollapsedConverter x:Key="NullToCollapsed"/>
         </ResourceDictionary>
