@@ -1,0 +1,63 @@
+<UserControl x:Class="DshLauncher.Views.StatusBarView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <!-- 顶部状态栏：常显 DSH 状态 + 端口 + 快速操作（Napcat 风） -->
+    <Border Background="{DynamicResource Brush.Surface}" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,0,1"
+            Padding="22,10">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- 左侧：状态指示 -->
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                <Border Width="8" Height="8" CornerRadius="4"
+                        Background="{Binding DshBrush}"
+                        VerticalAlignment="Center"/>
+                <TextBlock Text="{Binding DshText}" FontSize="13" FontWeight="SemiBold"
+                           Margin="8,0,0,0" VerticalAlignment="Center"/>
+                <TextBlock Text="{Binding DshDetail}" FontSize="12"
+                           Foreground="{DynamicResource Brush.Text.Secondary}"
+                           Margin="10,0,0,0" VerticalAlignment="Center"/>
+            </StackPanel>
+
+            <!-- 中间：端口 -->
+            <StackPanel Grid.Column="1" Orientation="Horizontal"
+                        VerticalAlignment="Center" Margin="24,0,0,0"
+                        HorizontalAlignment="Left">
+                <Border Background="{DynamicResource Brush.Surface.Hover}" CornerRadius="6" Padding="8,3">
+                    <TextBlock FontFamily="Consolas, Microsoft YaHei UI" FontSize="11.5"
+                               Foreground="{DynamicResource Brush.Text.Secondary}">
+                        <Run Text="端口 "/>
+                        <Run Text="{Binding Port, Mode=OneWay}" Foreground="{DynamicResource Brush.Accent.Blue}"/>
+                    </TextBlock>
+                </Border>
+            </StackPanel>
+
+            <!-- 右侧：操作 -->
+            <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                <!-- 嵌入 DSH 界面时：可停止 / 退出嵌入（WebView2 是 airspace，浮按钮会被盖住，故放状态栏） -->
+                <Button Content="停止 DeepSeek Harness" Style="{StaticResource RedButton}" Padding="12,5" FontSize="12" Margin="0,0,8,0"
+                        Command="{Binding StopCommand}" IsEnabled="{Binding CanStop}"
+                        Visibility="{Binding IsEmbedding, Converter={StaticResource BoolToVis}}"/>
+                <Button Content="← 退出嵌入" Padding="12,5" FontSize="12" Margin="0,0,8,0"
+                        Command="{Binding ExitEmbedCommand}"
+                        Visibility="{Binding IsEmbedding, Converter={StaticResource BoolToVis}}"/>
+                <!-- 非嵌入才显示：主题 / 刷新 / 版本（嵌入时只留停止+退出，避免挤满右上角） -->
+                <Button Content="{Binding ThemeLabel}" Command="{Binding ToggleThemeCommand}"
+                        Padding="12,5" FontSize="12" Margin="0,0,8,0"
+                        Visibility="{Binding IsEmbedding, Converter={StaticResource InvertBool}}"/>
+                <Border Background="{DynamicResource Brush.Surface.Hover}" CornerRadius="6" Padding="8,3" VerticalAlignment="Center"
+                        Visibility="{Binding IsEmbedding, Converter={StaticResource InvertBool}}">
+                    <TextBlock FontFamily="Consolas, Microsoft YaHei UI" FontSize="11"
+                               Foreground="{DynamicResource Brush.Text.Dim}">
+                        <Run Text="v"/>
+                        <Run Text="{Binding AppVersion, Mode=OneWay}"/>
+                    </TextBlock>
+                </Border>
+            </StackPanel>
+        </Grid>
+    </Border>
+</UserControl>

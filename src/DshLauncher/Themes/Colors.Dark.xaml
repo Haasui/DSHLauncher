@@ -1,0 +1,40 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- ============ 暗色 · 深蓝通透色板（与 Colors.xaml 同键名，App 启动时按设置整体替换） ============ -->
+    <Color x:Key="Color.Window.Background">#FF111827</Color>
+    <Color x:Key="Color.Surface">#FF1E2740</Color>
+    <Color x:Key="Color.Surface.Hover">#FF283450</Color>
+    <Color x:Key="Color.Surface.Active">#FF334360</Color>
+    <Color x:Key="Color.Border">#FF3B4A66</Color>
+
+    <Color x:Key="Color.Text.Primary">#FFF2F5FB</Color>
+    <Color x:Key="Color.Text.Secondary">#FFBCC6D6</Color>
+    <Color x:Key="Color.Text.Dim">#FF9099AA</Color>
+
+    <Color x:Key="Color.Accent.Blue">#FF5C9DFF</Color>
+    <Color x:Key="Color.Accent.Green">#FF22C55E</Color>
+    <Color x:Key="Color.Accent.Gray">#FF7A8598</Color>
+    <Color x:Key="Color.Accent.Red">#FFEF4444</Color>
+    <Color x:Key="Color.Accent.Orange">#FFF59E0B</Color>
+
+    <SolidColorBrush x:Key="Brush.Window.Background" Color="{StaticResource Color.Window.Background}"/>
+    <SolidColorBrush x:Key="Brush.Surface" Color="{StaticResource Color.Surface}"/>
+    <SolidColorBrush x:Key="Brush.Surface.Hover" Color="{StaticResource Color.Surface.Hover}"/>
+    <SolidColorBrush x:Key="Brush.Surface.Active" Color="{StaticResource Color.Surface.Active}"/>
+    <SolidColorBrush x:Key="Brush.Border" Color="{StaticResource Color.Border}"/>
+
+    <SolidColorBrush x:Key="Brush.Text.Primary" Color="{StaticResource Color.Text.Primary}"/>
+    <SolidColorBrush x:Key="Brush.Text.Secondary" Color="{StaticResource Color.Text.Secondary}"/>
+    <SolidColorBrush x:Key="Brush.Text.Dim" Color="{StaticResource Color.Text.Dim}"/>
+
+    <!-- 卡片：不透明、比背景亮一档，浅色可读 -->
+    <SolidColorBrush x:Key="Brush.Card" Color="#FF1C2539"/>
+    <SolidColorBrush x:Key="Brush.CardHover" Color="#FF273450"/>
+
+    <SolidColorBrush x:Key="Brush.Accent.Blue" Color="{StaticResource Color.Accent.Blue}"/>
+    <SolidColorBrush x:Key="Brush.Accent.Green" Color="{StaticResource Color.Accent.Green}"/>
+    <SolidColorBrush x:Key="Brush.Accent.Gray" Color="{StaticResource Color.Accent.Gray}"/>
+    <SolidColorBrush x:Key="Brush.Accent.Red" Color="{StaticResource Color.Accent.Red}"/>
+    <SolidColorBrush x:Key="Brush.Accent.Orange" Color="{StaticResource Color.Accent.Orange}"/>
+</ResourceDictionary>

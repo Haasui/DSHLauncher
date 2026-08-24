@@ -1,0 +1,33 @@
+# 构建产物
+bin/
+obj/
+dist/
+dist-new/
+release/
+
+# tests 内部构建产物与截图
+tests/**/bin/
+tests/**/obj/
+tests/**/preview/
+tests/*.png
+
+# 日志 / 临时
+*.log
+build-*.log
+smoke-test*.log
+*.tmp
+*.bak
+*.orig
+
+# IconGen 调试输出
+tests/IconGen/preview/
+
+# IDE
+.vs/
+*.user
+*.suo
+.idea/
+
+# 系统
+Thumbs.db
+.DS_Store

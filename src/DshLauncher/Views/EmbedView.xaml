@@ -1,0 +1,21 @@
+<UserControl x:Class="DshLauncher.Views.EmbedView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:wv2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf">
+    <!-- WebView2 嵌入 DSH Web（P5） -->
+    <Grid>
+        <wv2:WebView2 x:Name="Web"
+                      Visibility="{Binding ShowEmbed, Converter={StaticResource BoolToVis}}"/>
+
+        <!-- 停止 DSH / 退出嵌入：由顶部状态栏提供（WebView2 是 airspace，盖在它上面的 WPF 按钮点不到） -->
+        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center"
+                    MaxWidth="480"
+                    Visibility="{Binding ShowEmbed, Converter={StaticResource InvertBool}}">
+            <TextBlock Text="DeepSeek Harness 未运行" FontSize="22" FontWeight="SemiBold" HorizontalAlignment="Center"/>
+            <TextBlock Text="{Binding StatusText}" Foreground="{DynamicResource Brush.Text.Secondary}"
+                       Margin="0,10,0,18" TextWrapping="Wrap" HorizontalAlignment="Center"/>
+            <Button Content="返回启动页" Style="{StaticResource PrimaryButton}"
+                    Command="{Binding GotoHomeCommand}" HorizontalAlignment="Center"/>
+        </StackPanel>
+    </Grid>
+</UserControl>

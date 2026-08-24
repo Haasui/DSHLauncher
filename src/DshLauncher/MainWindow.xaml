@@ -1,0 +1,137 @@
+<Window x:Class="DshLauncher.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="clr-namespace:DshLauncher.ViewModels"
+        xmlns:views="clr-namespace:DshLauncher.Views"
+        Title="DeepSeek Harness 启动器"
+        Height="760" Width="1180" MinHeight="600" MinWidth="940"
+        WindowStartupLocation="CenterScreen"
+        Background="{DynamicResource Brush.Window.Background}">
+    <Window.InputBindings>
+        <KeyBinding Key="F" Modifiers="Control" Command="{Binding ToggleSearchCommand}"/>
+    </Window.InputBindings>
+    <Window.Resources>
+        <!-- VM -> View 映射 -->
+        <DataTemplate DataType="{x:Type vm:HomeViewModel}"><views:HomeView/></DataTemplate>
+        <DataTemplate DataType="{x:Type vm:SettingsViewModel}"><views:SettingsView/></DataTemplate>
+        <DataTemplate DataType="{x:Type vm:DoctorViewModel}"><views:DoctorView/></DataTemplate>
+        <DataTemplate DataType="{x:Type vm:UpdateViewModel}"><views:UpdateView/></DataTemplate>
+        <DataTemplate DataType="{x:Type vm:PluginViewModel}"><views:PluginView/></DataTemplate>
+        <DataTemplate DataType="{x:Type vm:LogViewModel}"><views:LogView/></DataTemplate>
+        <DataTemplate DataType="{x:Type vm:AboutViewModel}"><views:AboutView/></DataTemplate>
+        <DataTemplate DataType="{x:Type vm:QuickRefViewModel}"><views:QuickRefView/></DataTemplate>
+        <DataTemplate DataType="{x:Type vm:EmbedViewModel}"><views:EmbedView/></DataTemplate>
+        <DataTemplate DataType="{x:Type vm:StatusBarViewModel}"><views:StatusBarView/></DataTemplate>
+        <DataTemplate DataType="{x:Type vm:SessionSearchViewModel}"><views:SessionSearchView/></DataTemplate>
+
+        <!-- 左导航项样式 -->
+        <!-- 左导航项：Napcat menus 风（选中=半透明蓝背景+主题色字+右移+右侧小圆点；hover=右移+背景加深） -->
+        <Style x:Key="NavItemStyle" TargetType="ListBoxItem">
+            <Setter Property="Padding" Value="14,12"/>
+            <Setter Property="Margin" Value="8,2"/>
+            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Foreground" Value="{DynamicResource Brush.Text.Secondary}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ListBoxItem">
+                        <Grid>
+                            <!-- 选中/hover 背景 -->
+                            <Border x:Name="Bd" Background="Transparent" CornerRadius="8"
+                                    BorderThickness="0"/>
+                            <!-- 内容（右移：默认 Padding，选中/hover 左移 +4 并用 Margin 实现）-->
+                            <Grid x:Name="ItemContent" Margin="{TemplateBinding Padding}">
+                                <ContentPresenter/>
+                            </Grid>
+                            <!-- 右侧小圆点（选中显示）-->
+                            <Ellipse x:Name="Dot" Width="6" Height="6" Fill="{DynamicResource Brush.Accent.Blue}"
+                                     HorizontalAlignment="Right" VerticalAlignment="Center"
+                                     Margin="0,0,10,0" Opacity="0"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Bd" Property="Background" Value="{DynamicResource Brush.Surface.Hover}"/>
+                                <Setter TargetName="ItemContent" Property="Margin" Value="18,12,10,12"/>
+                            </Trigger>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter TargetName="Bd" Property="Background" Value="#264C8DFF"/>
+                                <Setter TargetName="ItemContent" Property="Margin" Value="18,12,10,12"/>
+                                <Setter TargetName="Dot" Property="Opacity" Value="1"/>
+                                <Setter Property="Foreground" Value="{DynamicResource Brush.Accent.Blue}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="{Binding NavColumnWidth}"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <!-- ======== 顶部状态栏（横跨两列） ======== -->
+        <ContentControl Grid.Row="0" Grid.ColumnSpan="2" Content="{Binding StatusBar}"/>
+
+        <!-- ======== 左侧导航 ======== -->
+        <Border Grid.Column="0" Grid.Row="1" Background="{DynamicResource Brush.Surface}"
+                BorderBrush="{DynamicResource Brush.Border}" BorderThickness="0,0,1,0">
+            <DockPanel>
+                <!-- 品牌区（Napcat 风：图标 + 竖条 + 标题） -->
+                <StackPanel DockPanel.Dock="Top" Margin="20,20,20,22">
+                    <StackPanel Orientation="Horizontal">
+                        <!-- pet 图标：圆角半透明容器 + 32px 图 -->
+                        <Border Width="44" Height="44" CornerRadius="10"
+                                Background="{DynamicResource Brush.Surface.Hover}" BorderBrush="{DynamicResource Brush.Border}" BorderThickness="1"
+                                VerticalAlignment="Center">
+                            <Image Source="pack://application:,,,/Assets/app-brand.png" Width="30" Height="30"/>
+                        </Border>
+                        <Border Width="3" Height="26" CornerRadius="2" Margin="14,0,0,0"
+                                Background="{DynamicResource Brush.Accent.Blue}" VerticalAlignment="Center"/>
+                        <StackPanel Margin="10,0,0,0" VerticalAlignment="Center">
+                            <TextBlock Text="DeepSeek Harness 启动器" FontSize="18" FontWeight="Bold"/>
+                            <!-- 副标题：DSHLauncher（短，侧栏 216px 内不截断） -->
+                            <TextBlock Text="DSHLauncher" FontSize="11"
+                                       Foreground="{DynamicResource Brush.Text.Dim}" Margin="0,3,0,0"/>
+                        </StackPanel>
+                    </StackPanel>
+                </StackPanel>
+                <ListBox ItemsSource="{Binding NavItems}"
+                         SelectedItem="{Binding SelectedNavItem}"
+                         ItemContainerStyle="{StaticResource NavItemStyle}"
+                         Background="Transparent" BorderThickness="0">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <DockPanel>
+                                <Border DockPanel.Dock="Right" Background="#FF4C8DFF" CornerRadius="8"
+                                        Padding="6,1" Margin="8,0,0,0" VerticalAlignment="Center"
+                                        Visibility="{Binding Badge, Converter={StaticResource NullToCollapsed}}">
+                                    <TextBlock Text="{Binding Badge}" FontSize="11" FontWeight="Bold" Foreground="White"/>
+                                </Border>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="{Binding Glyph}" FontFamily="Segoe MDL2 Assets"
+                                               FontSize="16" Width="28" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{Binding Label}" FontSize="14" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </DockPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+
+            </DockPanel>
+        </Border>
+
+        <!-- ======== 内容区 ======== -->
+        <ContentControl Grid.Column="1" Grid.Row="1" Content="{Binding CurrentPage}" Margin="28"/>
+
+        <!-- ======== 跨会话搜索浮层（Ctrl+F，A2） ======== -->
+        <ContentControl Grid.Row="0" Grid.ColumnSpan="2" Content="{Binding SessionSearch}" Panel.ZIndex="100"
+                        HorizontalAlignment="Center" VerticalAlignment="Top"
+                        Visibility="{Binding SessionSearch.Open, Converter={StaticResource BoolToVis}}"/>
+    </Grid>
+</Window>

@@ -1,0 +1,205 @@
+<UserControl x:Class="DshLauncher.Views.SettingsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <UserControl.Resources>
+        <Style x:Key="SectionHeader" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="{DynamicResource Brush.Text.Primary}"/>
+            <Setter Property="Margin" Value="0,20,0,0"/>
+        </Style>
+    </UserControl.Resources>
+    <!-- 设置页 · 端口 / 启动参数 / 自启（P3） -->
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+        <StackPanel>
+            <TextBlock Style="{StaticResource PageHeader}" Text="设置"/>
+
+            <Border Style="{StaticResource Card}" Margin="0,18,0,0">
+                <StackPanel>
+                    <TextBlock Style="{StaticResource SectionHeader}" Text="启动"/>
+                    <TextBlock Style="{StaticResource FieldLabel}" Text="DeepSeek Harness 端口"/>
+                    <TextBox Text="{Binding Port, UpdateSourceTrigger=PropertyChanged}"
+                             Width="140" HorizontalAlignment="Left" Margin="0,6,0,0"/>
+
+                    <TextBlock Style="{StaticResource FieldLabel}" Text="附加启动参数" Margin="0,18,0,0"/>
+                    <TextBox Text="{Binding ExtraArgs, UpdateSourceTrigger=PropertyChanged}" Margin="0,6,0,0"/>
+
+                    <TextBlock Style="{StaticResource FieldLabel}" Text="补丁文件路径" Margin="0,14,0,0"/>
+                    <TextBox Text="{Binding PatchFile, UpdateSourceTrigger=PropertyChanged}" Margin="0,6,0,0"/>
+
+                    <!-- 设置开关（Napcat switch_card：标签+开关 一行） -->
+                    <Grid Margin="0,20,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="打开启动器时自动启动 DeepSeek Harness" VerticalAlignment="Center"/>
+                        <ToggleButton Grid.Column="1" Style="{StaticResource Switch}" IsChecked="{Binding AutoStartOnLaunch}"/>
+                    </Grid>
+                    <TextBlock Style="{StaticResource SectionHeader}" Text="常规"/>
+                    <Grid Margin="0,12,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="开机自启（登录后自动启动）" VerticalAlignment="Center"/>
+                        <ToggleButton Grid.Column="1" Style="{StaticResource Switch}" IsChecked="{Binding StartWithWindows}"/>
+                    </Grid>
+                    <Grid Margin="0,12,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="关闭主窗口时最小化到托盘" VerticalAlignment="Center"/>
+                        <ToggleButton Grid.Column="1" Style="{StaticResource Switch}" IsChecked="{Binding MinimizeToTray}"/>
+                    </Grid>
+                    <Grid Margin="0,12,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="打开 DeepSeek Harness 界面时用系统浏览器（不勾选则在启动器窗口内打开）" VerticalAlignment="Center" TextWrapping="Wrap"/>
+                        <ToggleButton Grid.Column="1" Style="{StaticResource Switch}" IsChecked="{Binding OpenInBrowser}" VerticalAlignment="Center"/>
+                    </Grid>
+                    <TextBlock Style="{StaticResource SectionHeader}" Text="启动与安全"/>
+                    <Grid Margin="0,12,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="守护模式：异常退出时自动重启" VerticalAlignment="Center" TextWrapping="Wrap"/>
+                        <ToggleButton Grid.Column="1" Style="{StaticResource Switch}" IsChecked="{Binding AutoRestartOnCrash}" VerticalAlignment="Center"/>
+                    </Grid>
+                    <TextBlock Style="{StaticResource SectionHeader}" Text="外观"/>
+                    <Grid Margin="0,12,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="主题：浅色 / 深色（即时切换）" VerticalAlignment="Center" TextWrapping="Wrap"/>
+                        <ComboBox Grid.Column="1" ItemsSource="{Binding ThemeOptions}"
+                                  SelectedItem="{Binding SelectedThemeDisplay}" Width="140" VerticalAlignment="Center"/>
+                    </Grid>
+                    <TextBlock Text="全局热键：Ctrl+Alt+D 唤起 · Ctrl+Alt+E 打开界面 · Ctrl+Alt+S 停止"
+                               Foreground="{DynamicResource Brush.Text.Dim}" FontSize="11" Margin="0,14,0,0" TextWrapping="Wrap"/>
+
+                    <TextBlock Style="{StaticResource SectionHeader}" Text="界面"/>
+                    <Grid Margin="0,12,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="界面语言" VerticalAlignment="Center"/>
+                        <ComboBox Grid.Column="1" ItemsSource="{Binding LanguageOptions}"
+                                  SelectedItem="{Binding SelectedLanguageDisplay}" Width="120" VerticalAlignment="Center"/>
+                    </Grid>
+
+                    <TextBlock Style="{StaticResource SectionHeader}" Text="网络"/>
+                    <TextBlock Style="{StaticResource FieldLabel}" Text="npm 镜像/代理（可选）" Margin="0,12,0,0"/>
+                    <TextBox Text="{Binding NpmRegistry, UpdateSourceTrigger=PropertyChanged}" Margin="0,6,0,0"
+                             ToolTip="留空用官方源；例：https://registry.npmmirror.com"/>
+                    <TextBlock Text="网络不好时，填入 npm 镜像可加速下载；留空则用官方源。"
+                               Foreground="{DynamicResource Brush.Text.Dim}" FontSize="11" Margin="0,4,0,0" TextWrapping="Wrap"/>
+
+                    <TextBlock Style="{StaticResource SectionHeader}" Text="新增"/>
+                    <TextBlock Style="{StaticResource FieldLabel}" Text="一言语录接口（可选）" Margin="0,12,0,0"/>
+                    <TextBox Text="{Binding QuoteApiUrl, UpdateSourceTrigger=PropertyChanged}" Margin="0,6,0,0"
+                             ToolTip="留空用默认国际镜像；例：https://international.v1.hitokoto.cn/?encode=json&amp;max_length=64"/>
+
+                    <StackPanel Orientation="Horizontal" Margin="0,24,0,0">
+                        <Button Content="保存设置" Style="{StaticResource PrimaryButton}" Command="{Binding SaveCommand}"/>
+                        <TextBlock Text="{Binding StatusMessage}" Foreground="{DynamicResource Brush.Text.Secondary}"
+                                   VerticalAlignment="Center" Margin="14,0,0,0"/>
+                    </StackPanel>
+
+                </StackPanel>
+            </Border>
+
+            <!-- DSH 官方设置（host 视角，只读，settings.describe 官方 API） -->
+            <Border Style="{StaticResource Card}" Margin="0,14,0,0">
+                <StackPanel>
+                    <TextBlock Text="DeepSeek Harness 运行配置（高级）" FontSize="16" FontWeight="SemiBold"/>
+                    <TextBlock Text="查看运行中 DeepSeek Harness 的配置。仅供排查。"
+                               Style="{StaticResource PageSubtitle}" Margin="0,4,0,0" TextWrapping="Wrap"/>
+                    <StackPanel Orientation="Horizontal" Margin="0,12,0,0">
+                        <Button Content="刷新" Command="{Binding RefreshDshSettingsCommand}"/>
+                        <TextBlock Text="{Binding DshSettingsStatus}" Foreground="{DynamicResource Brush.Text.Secondary}"
+                                   VerticalAlignment="Center" Margin="12,0,0,0"/>
+                    </StackPanel>
+                    <ScrollViewer VerticalScrollBarVisibility="Auto" MaxHeight="380" Margin="0,12,0,0">
+                    <ItemsControl ItemsSource="{Binding DshSettings}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Background="{DynamicResource Brush.Surface}" CornerRadius="8" Padding="12,10" Margin="0,0,0,8">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="230"/>
+                                            <ColumnDefinition Width="70"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <StackPanel>
+                                            <TextBlock Text="{Binding Name}" FontWeight="SemiBold" FontFamily="Consolas, Microsoft YaHei UI"/>
+                                            <TextBlock Foreground="{DynamicResource Brush.Text.Dim}" FontSize="11">
+                                                <Run Text="rev "/><Run Text="{Binding Revision, Mode=OneWay}"/>
+                                            </TextBlock>
+                                        </StackPanel>
+                                        <TextBlock Grid.Column="1" Text="{Binding Applies}" VerticalAlignment="Center"
+                                                   Foreground="{DynamicResource Brush.Text.Secondary}"/>
+                                        <TextBlock Grid.Column="2" Text="{Binding Value}" TextWrapping="Wrap"
+                                                   FontFamily="Consolas, Microsoft YaHei UI" FontSize="12"
+                                                   Foreground="{DynamicResource Brush.Text.Secondary}"/>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                    </ScrollViewer>
+                </StackPanel>
+            </Border>
+
+            <!-- DSH 默认模型（B7，graphical config，写入走官方 settings.mutate CAS） -->
+            <Border Style="{StaticResource Card}" Margin="0,14,0,0">
+                <StackPanel>
+                    <TextBlock Text="默认模型" FontSize="16" FontWeight="SemiBold"/>
+                    <TextBlock Text="设置 DeepSeek Harness 默认使用的模型。"
+                               Style="{StaticResource PageSubtitle}" Margin="0,4,0,0" TextWrapping="Wrap"/>
+                    <StackPanel Orientation="Horizontal" Margin="0,12,0,0">
+                        <Button Content="读取" Command="{Binding LoadModelConfigCommand}"/>
+                        <TextBlock Text="{Binding ModelConfigStatus}" Foreground="{DynamicResource Brush.Text.Secondary}"
+                                   VerticalAlignment="Center" Margin="12,0,0,0" TextWrapping="Wrap"/>
+                    </StackPanel>
+
+                    <Grid Margin="0,14,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Text="服务商" VerticalAlignment="Center" Margin="0,0,12,12"/>
+                        <ComboBox Grid.Column="1" Margin="0,0,0,12" IsEditable="True"
+                                  ItemsSource="{Binding ProviderSuggestions}"
+                                  Text="{Binding Provider, UpdateSourceTrigger=PropertyChanged}"/>
+                        <TextBlock Grid.Row="1" Text="模型" VerticalAlignment="Center" Margin="0,0,12,12"/>
+                        <ComboBox Grid.Row="1" Grid.Column="1" Margin="0,0,0,12" IsEditable="True"
+                                  ItemsSource="{Binding ModelSuggestions}"
+                                  Text="{Binding Model, UpdateSourceTrigger=PropertyChanged}"/>
+                        <TextBlock Grid.Row="2" Text="推理强度" VerticalAlignment="Center"/>
+                        <ComboBox Grid.Row="2" Grid.Column="1"
+                                  ItemsSource="{Binding ReasoningEfforts}"
+                                  SelectedItem="{Binding ReasoningEffort}"/>
+                    </Grid>
+
+                    <StackPanel Orientation="Horizontal" Margin="0,16,0,0">
+                        <Button Content="保存默认模型" Style="{StaticResource PrimaryButton}"
+                                Command="{Binding SaveModelConfigCommand}"
+                                IsEnabled="{Binding IsModelConfigWritable}"/>
+
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

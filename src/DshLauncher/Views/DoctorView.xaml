@@ -1,0 +1,73 @@
+<UserControl x:Class="DshLauncher.Views.DoctorView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:ctl="clr-namespace:DshLauncher.Controls">
+    <!-- 诊断页 · 一键检测（P3） -->
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+        <StackPanel>
+            <TextBlock Style="{StaticResource PageHeader}" Text="诊断"/>
+            <TextBlock Style="{StaticResource PageSubtitle}" Text="一键检测 Node.js / npm / dsh 命令行 / 端口 / 磁盘 / 内存 / 网络 / 浏览器内核。" Margin="0,6,0,0"/>
+
+            <!-- 系统状态：紧凑环形（内存/磁盘） -->
+            <Border Style="{StaticResource Card}" Margin="0,16,0,0">
+                <StackPanel>
+                    <TextBlock Text="系统状态" FontSize="13" FontWeight="SemiBold"/>
+                    <StackPanel Orientation="Horizontal" Margin="0,12,0,0">
+                        <ctl:RingProgress Percent="{Binding MemoryPercent}" Label="内存" Size="72"/>
+                        <ctl:RingProgress Percent="{Binding DiskPercent}" Label="磁盘" Size="72" Margin="26,0,0,0"/>
+                        <StackPanel Margin="26,0,0,0" VerticalAlignment="Center">
+                            <TextBlock Text="{Binding DiskFree, StringFormat={}{0} 剩余}" FontSize="13" Foreground="{DynamicResource Brush.Text.Primary}"/>
+                            <TextBlock Text="内存使用率 / 磁盘可用空间" FontSize="11" Foreground="{DynamicResource Brush.Text.Secondary}" Margin="0,3,0,0"/>
+                        </StackPanel>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <!-- 动作行：一键检测 / 导出报告 / 查看组合配置 -->
+            <StackPanel Orientation="Horizontal" Margin="0,16,0,0">
+                <Button Content="一键检测" Style="{StaticResource PrimaryButton}" Command="{Binding RunCommand}"/>
+                <Button Content="导出报告" Command="{Binding ExportReportCommand}" Margin="12,0,0,0"/>
+                <Button Content="查看配置" Command="{Binding DumpConfigCommand}" Margin="12,0,0,0"/>
+                <TextBlock Text="正在检测…" Foreground="{DynamicResource Brush.Text.Secondary}"
+                           Visibility="{Binding IsRunning, Converter={StaticResource BoolToVis}}"
+                           VerticalAlignment="Center" Margin="14,0,0,0"/>
+                <TextBlock Text="{Binding ReportStatus}" Foreground="{DynamicResource Brush.Text.Secondary}"
+                           VerticalAlignment="Center" Margin="14,0,0,0" TextWrapping="Wrap"/>
+            </StackPanel>
+
+            <!-- 检测项：网格卡片（Napcat system_status_display 风） -->
+            <ItemsControl ItemsSource="{Binding Items}" Margin="0,16,0,0">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <UniformGrid Columns="2"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border Style="{StaticResource Card}" Margin="0,0,10,10" Padding="14,12">
+                            <StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <Ellipse Width="10" Height="10" Fill="{Binding Brush}" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{Binding Name}" FontWeight="SemiBold" Margin="8,0,0,0" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{Binding StatusText}" Foreground="{DynamicResource Brush.Text.Secondary}"
+                                               Margin="10,0,0,0" VerticalAlignment="Center" FontSize="12"/>
+                                </StackPanel>
+                                <TextBlock Text="{Binding Detail}" Foreground="{DynamicResource Brush.Text.Secondary}"
+                                           FontSize="12" Margin="0,6,0,0" TextWrapping="Wrap"/>
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+            <!-- 官方组合配置树（dsh web dump-config） -->
+            <Border Background="{DynamicResource Brush.Surface}" CornerRadius="10" Margin="0,12,0,0" Padding="14"
+                    Visibility="{Binding HasConfigDump, Converter={StaticResource BoolToVis}}">
+                <ScrollViewer MaxHeight="440" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+                    <TextBlock Text="{Binding ConfigDumpText}" FontFamily="Consolas" FontSize="12"
+                               TextWrapping="NoWrap" Foreground="{DynamicResource Brush.Text.Secondary}"/>
+                </ScrollViewer>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

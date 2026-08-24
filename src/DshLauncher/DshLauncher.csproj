@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <!-- 仅引用 WindowsForms 程序集（Notifier 托盘气泡用），不注入全局 using 以免类型歧义 -->
+    <UseWindowsForms>false</UseWindowsForms>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <RootNamespace>DshLauncher</RootNamespace>
+    <AssemblyName>DshLauncher</AssemblyName>
+    <Version>1.0.0</Version>
+    <Product>DSH Launcher</Product>
+    <Description>DeepSeek Harness 桌面启动器（WPF + WebView2）</Description>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <!-- 统一透明底图标（黑鱼直接显示）：托盘/标题栏/exe 同源，BMP 小帧 + PNG 256 保证 Windows 各尺寸取帧正常 -->
+    <ApplicationIcon>Assets\app.ico</ApplicationIcon>
+
+    <!-- 发布：dotnet publish -c Release -o release（win-x64 单文件，自包含，双击即用） -->
+    <PublishSingleFile Condition="'$(Configuration)' == 'Release'">true</PublishSingleFile>
+    <SelfContained Condition="'$(Configuration)' == 'Release'">true</SelfContained>
+    <RuntimeIdentifier Condition="'$(Configuration)' == 'Release'">win-x64</RuntimeIdentifier>
+    <IncludeNativeLibrariesForSelfExtract Condition="'$(Configuration)' == 'Release'">true</IncludeNativeLibrariesForSelfExtract>
+    <!-- 压缩单文件内托管程序集，显著缩小 exe（发布时略增启动开销） -->
+    <EnableCompressionInSingleFile Condition="'$(Configuration)' == 'Release'">true</EnableCompressionInSingleFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
+    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.2592.51" />
+    <PackageReference Include="ZstdSharp.Port" Version="0.8.8" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Assets\app.ico" />
+    <Resource Include="Assets\app.png" />
+    <Resource Include="Assets\app-brand.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.WindowsDesktop.App.WindowsForms" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- tests/ 在项目目录外（仓库根），SDK 默认不包含 -->
+  </ItemGroup>
+
+</Project>
