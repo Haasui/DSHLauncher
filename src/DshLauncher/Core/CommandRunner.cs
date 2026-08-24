@@ -23,7 +23,8 @@ public static class CommandRunner
         };
         psi.ArgumentList.Add("/d");
         psi.ArgumentList.Add("/c");
-        psi.ArgumentList.Add(command);
+        // 强制子进程用 UTF-8 代码页输出（chcp 65001），和下面 UTF-8 解码/中文系统默认 GBK 对齐，避免乱码
+        psi.ArgumentList.Add("chcp 65001 >nul & " + command);
 
         using var p = Process.Start(psi);
         if (p is null) return new CommandResult(-1, "无法启动进程");
