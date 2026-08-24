@@ -161,12 +161,14 @@ public sealed class DoctorService : IDoctorService
             cts.CancelAfter(TimeSpan.FromSeconds(8));
             using var client = new HttpClient { Timeout = TimeSpan.FromSeconds(8) };
             var resp = await client.GetAsync(NpmBase(), cts.Token);
-            return new DoctorCheck("网络", resp.IsSuccessStatusCode ? CheckStatus.Pass : CheckStatus.Warn,
-                $"npm registry {(resp.IsSuccessStatusCode ? "可达" : $"HTTP {(int)resp.StatusCode}")}");
+            var ok = resp.IsSuccessStatusCode;
+            return new DoctorCheck("网络", ok ? CheckStatus.Pass : CheckStatus.Warn,
+                ok ? "npm registry 可达"
+                   : $"npm registry 不可达（HTTP {(int)resp.StatusCode}）。安装/更新插件或 dsh 会失败，建议在设置页配置 npm 镜像");
         }
         catch (Exception ex)
         {
-            return new DoctorCheck("网络", CheckStatus.Fail, ex.Message);
+            return new DoctorCheck("网络", CheckStatus.Fail, "无法联网：" + ex.Message + "。安装/更新会失败，请检查网络或在设置页配置 npm 镜像。");
         }
     }
 

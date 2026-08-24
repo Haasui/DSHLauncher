@@ -1,7 +1,9 @@
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Text;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using DshLauncher.Core;
@@ -21,6 +23,9 @@ public partial class DoctorViewModel : ObservableObject
 
     [ObservableProperty]
     private string _reportStatus = string.Empty;
+
+    [ObservableProperty]
+    private string _healthSummary = string.Empty;
 
     [ObservableProperty]
     private string _configDumpText = string.Empty;
@@ -97,12 +102,77 @@ public partial class DoctorViewModel : ObservableObject
         {
             var checks = await _doctor.RunAllAsync();
             foreach (var c in checks) Items.Add(new DoctorItemViewModel(c));
+            HealthSummary = BuildSummary(checks);
         }
         finally
         {
             IsRunning = false;
         }
     }
+
+    private static string BuildSummary(IReadOnlyList<DoctorCheck> checks)
+    {
+        var pass = checks.Count(c => c.Status == CheckStatus.Pass);
+        var warn = checks.Count(c => c.Status == CheckStatus.Warn);
+        var fail = checks.Count(c => c.Status == CheckStatus.Fail);
+        return $"共 {checks.Count} 项 · 通过 {pass} · 警告 {warn} · 失败 {fail}";
+    }
+
+    [RelayCommand]
+    private async Task FixAsync()
+    {
+        if (IsRunning) return;
+        IsRunning = true;
+        Items.Clear();
+        try
+        {
+            var checks = await _doctor.RunAllAsync();
+            foreach (var c in checks) Items.Add(new DoctorItemViewModel(c));
+            HealthSummary = BuildSummary(checks);
+            var problems = checks.Where(c => c.Status == CheckStatus.Fail || c.Status == CheckStatus.Warn).ToList();
+            if (problems.Count == 0)
+            {
+                ReportStatus = "检测完毕：一切正常，无需修复。";
+                return;
+            }
+            var sb = new StringBuilder();
+            sb.AppendLine($"检测到 {problems.Count} 个问题，点「是」自动修复能修的：");
+            foreach (var p in problems) sb.AppendLine($"  · {p.Name}：{Brief(p.Detail)}");
+            sb.AppendLine();
+            sb.AppendLine("可自动修复：dsh 重装、WebView2 下载、Node/npm 下载。其余请参考提示。");
+            var yes = System.Windows.MessageBox.Show(sb.ToString(), "一键修复", System.Windows.MessageBoxButton.YesNo, System.Windows.MessageBoxImage.Question);
+            if (yes != System.Windows.MessageBoxResult.Yes) { ReportStatus = "已取消修复。"; return; }
+            var done = new List<string>();
+            if (problems.Any(p => p.Name == "dsh"))
+            {
+                var r = await CommandRunner.RunAsync("npm install -g @deepseek-ai/dsh@latest", TimeSpan.FromMinutes(5));
+                done.Add(r.ExitCode == 0 ? "dsh 已安装/更新" : "dsh 安装失败：" + Brief(r.Output));
+            }
+            if (problems.Any(p => p.Name == "WebView2"))
+            {
+                Process.Start(new ProcessStartInfo("https://developer.microsoft.com/microsoft-edge/webview2/") { UseShellExecute = true });
+                done.Add("已打开 WebView2 下载页");
+            }
+            if (problems.Any(p => p.Name is "npm" or "Node.js"))
+            {
+                Process.Start(new ProcessStartInfo("https://nodejs.org/") { UseShellExecute = true });
+                done.Add("已打开 Node.js 下载页");
+            }
+            if (problems.Any(p => p.Name == "网络"))
+                done.Add("网络异常，请在设置页配置 npm 镜像");
+            if (problems.Any(p => p.Name.Contains("端口")))
+                done.Add("端口占用，请在设置页更换端口");
+            ReportStatus = (done.Count == 0 ? "无可自动修复项。" : string.Join("；", done)) + "。请重新「一键检测」查看。";
+            var re = await _doctor.RunAllAsync();
+            Items.Clear();
+            foreach (var c in re) Items.Add(new DoctorItemViewModel(c));
+            HealthSummary = BuildSummary(re);
+        }
+        finally { IsRunning = false; }
+    }
+
+    private static string Brief(string s)
+        => string.IsNullOrEmpty(s) ? "" : (s.Length > 40 ? s[..40] + "…" : s);
 
     [RelayCommand]
     private async Task DumpConfigAsync()
