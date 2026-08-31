@@ -11,7 +11,7 @@
     <Nullable>enable</Nullable>
     <RootNamespace>DshLauncher</RootNamespace>
     <AssemblyName>DshLauncher</AssemblyName>
-    <Version>1.0.0</Version>
+    <Version>1.0.1</Version>
     <Product>DSH Launcher</Product>
     <Description>DeepSeek Harness 桌面启动器（WPF + WebView2）</Description>
     <ApplicationManifest>app.manifest</ApplicationManifest>

@@ -27,6 +27,13 @@
                     <TextBlock Style="{StaticResource FieldLabel}" Text="补丁文件路径" Margin="0,16,0,0"/>
                     <TextBox Text="{Binding PatchFile, UpdateSourceTrigger=PropertyChanged}" Margin="0,6,0,0"/>
 
+                    <TextBlock Style="{StaticResource FieldLabel}" Text="启动等端口就绪上限（秒）" Margin="0,16,0,0"/>
+                    <TextBox Text="{Binding StartupWaitSeconds, UpdateSourceTrigger=PropertyChanged}"
+                             Width="140" HorizontalAlignment="Left" Margin="0,6,0,0"
+                             ToolTip="首启可能在拉取/重建依赖，默认 120 秒；仍超时就把这个值调大，并从日志页看 DSH 实时输出"/>
+                    <TextBlock Text="启动后等待端口可用的最长时间；首次启动或刚更新 dsh 后可能较慢，可适当调大。"
+                               Foreground="{DynamicResource Brush.Text.Dim}" FontSize="11" Margin="0,4,0,0" TextWrapping="Wrap"/>
+
                     <!-- 设置开关（Napcat switch_card：标签+开关 一行） -->
                     <Grid Margin="0,20,0,0">
                         <Grid.ColumnDefinitions>

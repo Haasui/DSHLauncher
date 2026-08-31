@@ -19,9 +19,21 @@ public static class AppServices
 
     static AppServices()
     {
-        // DSH 进程输出 → 日志缓冲
-        Dsh.StdoutReceived += (_, line) => Log.Append(line, LogSource.Stdout);
-        Dsh.StderrReceived += (_, line) => Log.Append(line, LogSource.Stderr);
-        Dsh.Exited += (_, _) => Log.Append("[启动器] DSH 进程已退出。", LogSource.Stderr);
+        // DSH 进程输出 → 内存日志缓冲（日志页）+ 持久化 dsh.log（启动失败时排查）
+        Dsh.StdoutReceived += (_, line) =>
+        {
+            Log.Append(line, LogSource.Stdout);
+            FileLog.AppendDsh(line, LogSource.Stdout);
+        };
+        Dsh.StderrReceived += (_, line) =>
+        {
+            Log.Append(line, LogSource.Stderr);
+            FileLog.AppendDsh(line, LogSource.Stderr);
+        };
+        Dsh.Exited += (_, _) =>
+        {
+            Log.Append("[启动器] DSH 进程已退出。", LogSource.Stderr);
+            FileLog.MarkDsh("DSH 进程已退出");
+        };
     }
 }

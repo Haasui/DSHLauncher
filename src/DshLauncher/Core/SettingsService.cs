@@ -26,6 +26,10 @@ public sealed class SettingsService : ISettingsService
 
     public bool AutoRestartOnCrash { get; set; } = true;
 
+    /// <summary>启动后等待端口就绪上限（秒，默认 120）。</summary>
+    public int StartupWaitSeconds { get; set; } = 120;
+
+
     /// <summary>启动器主题：light | dark。</summary>
     public string Theme { get; set; } = "light";
 
@@ -56,6 +60,7 @@ public sealed class SettingsService : ISettingsService
             MinimizeToTray = data.MinimizeToTray;
             OpenInBrowser = data.OpenInBrowser;
             AutoRestartOnCrash = data.AutoRestartOnCrash;
+            if (data.StartupWaitSeconds is > 0 and <= 3600) StartupWaitSeconds = data.StartupWaitSeconds.Value;
             if (data.Theme is "light" or "dark") Theme = data.Theme;
             NpmRegistry = string.IsNullOrWhiteSpace(data.NpmRegistry) ? null : data.NpmRegistry!.Trim();
             QuoteApiUrl = string.IsNullOrWhiteSpace(data.QuoteApiUrl) ? null : data.QuoteApiUrl!.Trim();
@@ -83,6 +88,7 @@ public sealed class SettingsService : ISettingsService
             MinimizeToTray = MinimizeToTray,
             OpenInBrowser = OpenInBrowser,
             AutoRestartOnCrash = AutoRestartOnCrash,
+            StartupWaitSeconds = StartupWaitSeconds,
             Theme = Theme,
             NpmRegistry = NpmRegistry,
             QuoteApiUrl = QuoteApiUrl,
@@ -126,6 +132,7 @@ public sealed class SettingsService : ISettingsService
         public bool MinimizeToTray { get; set; }
         public bool OpenInBrowser { get; set; }
         public bool AutoRestartOnCrash { get; set; }
+        public int? StartupWaitSeconds { get; set; }
         public string Theme { get; set; } = "light";
         public bool? FollowWebTheme { get; set; }
         public string? NpmRegistry { get; set; }

@@ -83,6 +83,7 @@ public sealed class DshService : IDshService
             var proc = Process.Start(psi) ?? throw new InvalidOperationException("无法启动 cmd.exe");
             lock (_processLock) { _process = proc; }
             StartedAt = DateTime.Now;
+            FileLog.MarkDsh($"spawn PID {proc.Id} | {SafeCommandLine}");
 
             proc.EnableRaisingEvents = true;
             proc.OutputDataReceived += (_, e) =>

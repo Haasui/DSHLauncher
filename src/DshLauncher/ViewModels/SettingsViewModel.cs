@@ -22,6 +22,7 @@ public partial class SettingsViewModel : ObservableObject
         _minimizeToTray = _settings.MinimizeToTray;
         _openInBrowser = _settings.OpenInBrowser;
         _autoRestartOnCrash = _settings.AutoRestartOnCrash;
+        _startupWaitSeconds = _settings.StartupWaitSeconds;
         _theme = _settings.Theme;
         _npmRegistry = _settings.NpmRegistry ?? string.Empty;
         _quoteApiUrl = _settings.QuoteApiUrl ?? string.Empty;
@@ -51,6 +52,9 @@ public partial class SettingsViewModel : ObservableObject
 
     [ObservableProperty]
     private bool _autoRestartOnCrash = true;
+
+    [ObservableProperty]
+    private int _startupWaitSeconds = 120;
 
     public string[] ThemeOptions { get; } = { "浅色", "深色" };
 
@@ -122,6 +126,12 @@ public partial class SettingsViewModel : ObservableObject
             return;
         }
 
+        if (StartupWaitSeconds is < 1 or > 3600)
+        {
+            StatusMessage = "启动等待必须在 1–3600 秒之间。";
+            return;
+        }
+
         _settings.Port = Port;
         _settings.ExtraArgs = ExtraArgs;
         _settings.PatchFile = PatchFile;
@@ -130,6 +140,7 @@ public partial class SettingsViewModel : ObservableObject
         _settings.MinimizeToTray = MinimizeToTray;
         _settings.OpenInBrowser = OpenInBrowser;
         _settings.AutoRestartOnCrash = AutoRestartOnCrash;
+        _settings.StartupWaitSeconds = StartupWaitSeconds;
         _settings.Theme = Theme;
         ThemeManager.Apply(ThemeManager.Resolve(Theme)); // 保存后应用（保留界面即时生效）
         _settings.NpmRegistry = string.IsNullOrWhiteSpace(NpmRegistry) ? null : NpmRegistry.Trim();

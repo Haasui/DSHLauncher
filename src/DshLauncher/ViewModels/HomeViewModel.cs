@@ -643,8 +643,12 @@ public partial class HomeViewModel : ObservableObject
 
     private async Task WaitUntilRunningAsync()
     {
-        // 首启可能拉 npx 依赖、构建 native 库，给到 120s（稳定性）
-        for (var i = 0; i < 240; i++)
+        // 首启可能拉 npx 依赖、构建 native 库，或刚更新 dsh 后重建 profile 模块，可能很慢 → 上限可配置（默认 120s）
+        var waitSeconds = _settings.StartupWaitSeconds;
+        if (waitSeconds < 1) waitSeconds = 120;
+        const int stepMs = 500;
+        var steps = (int)Math.Ceiling(waitSeconds * 1000.0 / stepMs);
+        for (var i = 0; i < steps; i++)
         {
             if (State != DshState.Starting) return;
             bool open;
@@ -659,15 +663,20 @@ public partial class HomeViewModel : ObservableObject
                 });
                 return;
             }
-            await Task.Delay(500);
+            await Task.Delay(stepMs);
         }
         _ = _ui.InvokeAsync(() =>
         {
-            if (State == DshState.Starting)
-            {
-                ErrorMessage = "等待端口开放超时（120s），可能首次启动仍在拉依赖，请查看日志或重试。";
-                State = DshState.Error;
-            }
+            if (State != DshState.Starting) return;
+            // 超时：把 DSH 自身的实时输出尾段带出来，让用户直接看到悬在哪一步
+            var tail = string.Join('\n', FileLog.ReadDshTail(24));
+            var logHint = string.IsNullOrEmpty(tail) ? string.Empty : $"\n\n最近 DSH 输出（{FileLog.DshLogPath}）：\n{tail}";
+            ErrorMessage = _dsh.IsRunning
+                ? $"启动 {waitSeconds}s 后端口仍未就绪，但 DSH 进程仍在运行（可能还在拉依赖 / 重建 profile 模块）。\n" +
+                  $"可到「日志」页查看实时输出，或直接打开：{FileLog.DshLogPath}{logHint}"
+                : $"启动 {waitSeconds}s 后端口仍未就绪，且 DSH 进程已退出（可能启动即崩溃）。\n" +
+                  $"请查看：{FileLog.DshLogPath}{logHint}";
+            State = DshState.Error;
         });
     }
 

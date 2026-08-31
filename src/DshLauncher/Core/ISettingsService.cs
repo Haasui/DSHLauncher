@@ -29,6 +29,9 @@ public interface ISettingsService
     /// <summary>守护模式：DSH 异常退出时自动重启（默认开）。</summary>
     bool AutoRestartOnCrash { get; set; }
 
+    /// <summary>启动后等待端口就绪的上限（秒，默认 120）。首启拉依赖/重建模块可能很慢，可按需调大。</summary>
+    int StartupWaitSeconds { get; set; }
+
     /// <summary>启动器主题：light | dark。</summary>
     string Theme { get; set; }
 
